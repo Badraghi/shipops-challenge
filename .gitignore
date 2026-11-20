@@ -1,0 +1,27 @@
+# Environment variables and secrets
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+id_ed25519
+.ssh/
+.config/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node.js
+node_modules/
+
+# Temporary files
+*.log
+*.tmp
+.cache/
+
+# Editor files
+.vscode/
+.idea/
+.DS_Store
