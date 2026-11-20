@@ -45,12 +45,73 @@ Result: Build completed successfully.
 
 ## Milestone 2: kind, Helm, PostgreSQL and PVC
 
-Status: NOT STARTED
+Status: PASS - verified Kubernetes and persistence checks
 
-- Two API Pods Ready: NOT TESTED
-- PostgreSQL item ID before restart: NOT TESTED
-- PostgreSQL item ID after restart: NOT TESTED
-- `kubectl port-forward` access: NOT TESTED
+- Two API Pods Ready: PASS (2/2)
+- PostgreSQL item ID before restart: PASS (ID 1)
+- PostgreSQL item ID after restart: PASS (ID 1)
+- `kubectl port-forward` access: PASS (port 18080)
+
+
+### Verified Milestone 2 Results
+
+Cluster: kind-shipops
+Namespace: shipops
+
+Helm release: shipops
+Helm status: deployed
+Helm revision: 2
+
+Kubernetes:
+- API replicas: 2/2 Ready
+- PostgreSQL: 1/1 Ready
+- PostgreSQL PVC: Bound
+- StorageClass: standard
+
+Database readiness:
+GET /readyz
+Response: {"status":"ready"}
+HTTP status: 200
+Result: PASS
+
+Item creation:
+POST /items
+Request: {"name":"persistent-notebook"}
+Response: {"id":1,"name":"persistent-notebook"}
+Result: PASS
+Note: POST HTTP status was not separately recorded.
+
+Item retrieval before database restart:
+GET /items/1
+Response: {"id":1,"name":"persistent-notebook"}
+HTTP status: 200
+Result: PASS
+
+PostgreSQL restart test:
+Old Pod: shipops-postgres-79f6dd66b9-wbfsn
+New Pod: shipops-postgres-79f6dd66b9-tsp79
+
+Rollout result:
+deployment "shipops-postgres" successfully rolled out
+
+PVC after restart:
+- Name: shipops-postgres-data
+- Status: Bound
+- Volume: pvc-dd927a0e-bb0d-42ec-9353-9e77e9197145
+
+Item retrieval after database restart:
+GET /items/1
+
+Actual output:
+{"id":1,"name":"persistent-notebook"}
+HTTP_STATUS: 200
+
+Persistence verification: PASS
+
+Limitation:
+Persistence was tested after Pod replacement
+in the same kind cluster.
+Cluster deletion was not tested.
 
 ## Milestone 3: GitHub Actions, GHCR and Argo CD
 

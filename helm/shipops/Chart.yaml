@@ -1,0 +1,6 @@
+apiVersion: v2
+name: shipops
+description: ShipOps API plus local PostgreSQL for kind
+version: 0.1.0
+appVersion: "step1"
+type: application
